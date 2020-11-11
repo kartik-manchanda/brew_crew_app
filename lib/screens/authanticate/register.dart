@@ -1,39 +1,39 @@
-import 'package:brew_crew/services/auth.dart';
 import 'package:brew_crew/shared/constants.dart';
 import 'package:brew_crew/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/auth.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   final Function toggleView;
-  SignIn({this.toggleView});
+  Register({this.toggleView});
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
-  bool loading=false;
 
   String email = '';
   String password = '';
   String error = '';
 
+  bool loading=false;
+
   @override
   Widget build(BuildContext context) {
-    return loading ? Loading() :Scaffold(
+    return loading? Loading() :Scaffold(
       backgroundColor: Colors.brown[100],
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text('Sign In to Brew Crew'),
+        title: Text('Register to Brew Crew'),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
-            label: Text('Register'),
+            label: Text('SignIn'),
             onPressed: () {
               widget.toggleView();
             },
@@ -68,21 +68,18 @@ class _SignInState extends State<SignIn> {
                 RaisedButton(
                     color: Colors.pink[400],
                     child: Text(
-                      'Sign In',
+                      'Register',
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         setState(()=>loading=true);
-                        dynamic result = await _auth.signInWithEmailAndPassword(
-                            email, password);
-
+                        dynamic result = await _auth
+                            .registerWithEmailAndPassword(email, password);
                         if (result == null) {
                           setState(() {
-                            error =
-                              'could not sign in with these credentials';
-                              loading=false;
-
+                            error = 'please enter a valid email';
+                            loading=false;
                           });
                         }
                       }
